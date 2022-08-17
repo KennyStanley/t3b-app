@@ -1,7 +1,7 @@
 import { Mesh, MeshBuilder } from '@babylonjs/core'
 import { AdvancedDynamicTexture, TextBlock } from '@babylonjs/gui'
 import { useEffect, useRef } from 'react'
-import { useMachineContext } from '../../../context/MachineContext'
+import { useMachineContext } from '../../contexts/MachineContext'
 
 export const DataCard = () => {
   const [state] = useMachineContext()

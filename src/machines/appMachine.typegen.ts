@@ -22,11 +22,10 @@ export interface Typegen0 {
     createScene: "CANVAS_MOUNTED";
     runRenderLoop: "" | "xstate.stop";
     setCameraArcRotate: "CANVAS_MOUNTED";
-    setTrpcClient: "SETUP";
     toggle: "TOGGLE";
     turnMeshOff: "";
     turnMeshOn: "";
-    updateData: "SETUP" | "UPDATE_DATA";
+    updateData: "UPDATE_DATA";
   };
   eventsCausingServices: {};
   eventsCausingGuards: {

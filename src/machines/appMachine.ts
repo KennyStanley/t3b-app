@@ -1,19 +1,15 @@
 import {
-  ActionManager,
   ArcRotateCamera,
   Color3,
-  Color4,
   CreateSphere,
-  ExecuteCodeAction,
   HemisphericLight,
   Scene,
   StandardMaterial,
   Vector3,
 } from '@babylonjs/core'
-import { TRPCClient } from '@trpc/client'
-import { assign, createMachine, Interpreter, send, spawn, State } from 'xstate'
+import { assign, createMachine, Interpreter } from 'xstate'
 import { EngineType } from '../components/canvas/Canvas'
-import { AppRouter } from '../server/router'
+import { Typegen0 } from './appMachine.typegen'
 
 export type AppData = {
   state: 'on' | 'off'
@@ -21,7 +17,6 @@ export type AppData = {
 }
 
 export type AppMachineContext = {
-  trpcClient?: TRPCClient<AppRouter>
   data: AppData
   engine?: EngineType
   scene?: Scene
@@ -31,11 +26,6 @@ export type AppMachineContext = {
 export type AppMachineEvent =
   | {
       type: 'TOGGLE'
-    }
-  | {
-      type: 'SETUP'
-      trpcClient: TRPCClient<AppRouter>
-      data: AppData
     }
   | {
       type: 'UPDATE_DATA'
@@ -49,7 +39,10 @@ export type AppMachineEvent =
       type: 'CANVAS_UNMOUNTED'
     }
 
-export type AppMachineState = State<AppMachineContext, AppMachineEvent, any>
+export type AppMachineState = {
+  context: AppMachineContext
+  matches: (state: Typegen0['matchesStates']) => boolean
+}
 export type AppMachineSend = (event: AppMachineEvent) => void
 export type AppMachineService = Interpreter<
   AppMachineContext,
@@ -58,11 +51,10 @@ export type AppMachineService = Interpreter<
 >
 
 export const appMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QEMAOqB0BLAdlgLlsgDZYBeuUAxAMoCiAKgKoAKioqA9rAVpzuxAAPRAEYAbAFYM4gAwBOAMwB2AByKALBsXyATBIA0IAJ6J5sjLKtXRq1aN27Zk5QF9XRtJgC2nAK44hDhQAMLIOABuyLBUIQCCAHIAanE0APoAsgDyTAkMdAAiglw8hPyCIgga8qIYSsrV1eoaoraSRqYIorIaGJLWsrb2js7i7p7oGADGAE5gyEFQNFNgOGBUxdy85UjCiIqK4jIKOv3i4oqSusodiMoNdfJPyvKSqlfKB+MgXhhzyBBjBhYMYcFNKMtVutNqU+AJdpVlLJVBgGk8lIpWvo3rcEOIHgNZOJVPI1Mj5N9fv9AVQGFkAOL0gAydBh23hoEqdhRoiu4leDWU1wUuP60je5kUunk2iUGgalMm1OMVFYBTi+TS6oYcTZZQ5ewQQsUGAc1VJ1VESMk8lxLSO6KexPEGguug07g8IBwnAgcEEv1wvBI5EoerhFUQGl0uNaKPNT1U2l0mPEukVPn8gUoYUi0XDO05+1E8gwuikaftOlkMZMYlsfQGoldmOUvLcXt+s3mi0hawLBsqLlxQt6hJ6qnuKYpnaV80BGE4ADMlwPIwg3ibVLp7ApWi0VO060arBgE-cLtp7qoM3950DCyASuz15Ky+bPu6NKoLqIR8Sz0de4rE+WQOwmTBlWBUFwWCPswDXBFEEkFC6iJL95GaVpbWPZQAITUkkTAxQwNvZVEKLDdMTQysmk0bDcTkXRLGsS4pUkZsSwzCjDVsWMb09IA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QEMAOqB0BLAdlgLlsgDZYBeuUAxAKoAKAIgIIAqAogPrMtOKioB7WASwCcfEAA9EARgBsAVgxyADAE4AzAoAsAJgUbVGtQoA0IAJ6IAHGoxqHa6-usB2a9rnyAvt-NpMAFsBAFccQhwoAGFkHAA3ZFgqKKYAOQA1JgBlDgBZAHkaVPYGCUFhQjEJaQRtTQwZNzrtFVddbQVnOXMrBFt7R2dO908fPxAAjABjACcwZAioLKmwHDAqMqERKqQpRA1DZXUNd1cVbVcZLTNLRFdPDBUn8+cPVzk5NV9-dAw55AgFgwsAsOCmlGWq3WmwqonEuxqZ2sGFcCmeHzkHg82h6iDkHUez201gMMnu7m+E1+-0BVBY+QA4gyADJsGHbeGgRHaGT2VSaBT497aA642qowlPDTWGSdHRObSUyY0iy0RisTjcXi7coc6p3XQaBr6FQyFquVxqGTyMXS1wDBz4lT43TuQ2+cY4AQQOASSa4EQkciUdmVTl7Wq6MUyFRGxwmaxud6W93jSbBMKLGLxRKhuH6hAaXQqDAKWUKBzOs4qG69GNxxydJNyFMaJW-WbzRaQtZ5nZcxAKVxiz5KZ4qazStGmtrtzAqjACABmS774ZqnSNr3kaJjamd3VuCBbvOnVx5MbkGllc7+80Bi-DurDBf3RpNT3u6j0bTFrmMpbPGc0omEOXxptS95AiCYIQisvY6lsL4IoOChKPuci6Go2gdIomFqH+AHTq0sa2Ghlq3iqa4FqS9jOlhOGCoKWFikORrPNauj6LozhmnO1EoQgjTRtYHreEAA */
   createMachine(
     {
       context: {
-        trpcClient: undefined,
         data: {
           state: 'off',
           count: 0,
@@ -79,8 +71,8 @@ export const appMachine =
       states: {
         initializing: {
           on: {
-            SETUP: {
-              actions: ['setTrpcClient', 'updateData'],
+            UPDATE_DATA: {
+              actions: 'updateData',
               target: 'mountingCanvas',
             },
           },
@@ -135,11 +127,6 @@ export const appMachine =
     },
     {
       actions: {
-        setTrpcClient: assign({
-          trpcClient: (_, event) => {
-            return event.trpcClient
-          },
-        }),
         updateData: assign({
           data: (_, event) => {
             return event.data

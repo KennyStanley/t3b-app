@@ -1,24 +1,14 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import Script from 'next/script'
-import { useActor } from '@xstate/react'
 import { Engine, Scene } from '@babylonjs/core'
-import { useMachineContext } from '../../context/MachineContext'
-import { AppMachineSend, AppMachineState } from '../../machines/appMachine'
+import { useMachineContext } from '../../contexts/MachineContext'
 
 export interface EngineType extends Engine {
   renderLoop: () => void
 }
 
-export const Canvas = ({
-  state,
-  send,
-}: {
-  state: AppMachineState
-  send: AppMachineSend
-}) => {
-  useEffect(() => {
-    console.log('State:', state)
-  }, [state])
+export const Canvas = () => {
+  const [state, send] = useMachineContext()
 
   const canvasHtmlElement = useRef<HTMLCanvasElement>(null)
 
@@ -33,7 +23,6 @@ export const Canvas = ({
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', () => {
         engine.resize()
-        // send({ type: 'CANVAS_RESIZE' })
       })
     }
     return engine

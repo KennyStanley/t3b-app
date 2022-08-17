@@ -5,10 +5,10 @@ import { useMachine } from '@xstate/react'
 import { appMachine, AppMachineState } from '../machines/appMachine'
 import { trpc } from '../utils/trpc'
 import { Canvas } from '../components/canvas/Canvas'
-import { MachineProvider } from '../context/MachineContext'
-import { Header } from '../components/ui/two-d/Header'
+import { MachineProvider } from '../contexts/MachineContext'
+import { Header } from '../components/hud/Header'
 import { ActionManager, ExecuteCodeAction } from '@babylonjs/core'
-import { DataCard } from '../components/ui/three-d/DataCard'
+import { DataCard } from '../components/canvas/DataCard'
 
 // import { inspect } from '@xstate/inspect'
 // if (typeof window !== 'undefined') {
@@ -53,16 +53,6 @@ const Home: NextPage = () => {
     },
   })
 
-  // Runs first time the component is rendered to setup the machine
-  useEffect(() => {
-    if (utils.client && machine.data) {
-      send('SETUP', {
-        trpcClient: utils.client,
-        data: machine.data,
-      })
-    }
-  }, [utils.client, machine.data, send])
-
   // Runs when the trpc data changes
   useEffect(() => {
     if (machine.data) {
@@ -81,8 +71,8 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="pointer-events-none">
-        <Canvas state={state as unknown as AppMachineState} send={send} />
         <MachineProvider service={machineService}>
+          <Canvas />
           <Header />
           <DataCard />
         </MachineProvider>

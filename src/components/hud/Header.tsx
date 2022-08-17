@@ -1,4 +1,4 @@
-import { useMachineContext } from '../../../context/MachineContext'
+import { useMachineContext } from '../../contexts/MachineContext'
 
 export const Header = () => {
   const [state, send] = useMachineContext()

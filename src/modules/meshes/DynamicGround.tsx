@@ -52,7 +52,6 @@ export const DynamicGround = () => {
     map.material = mapMaterial
 
     return () => {
-      // ground.dispose()
       map.dispose()
       mapMaterial.dispose()
     }

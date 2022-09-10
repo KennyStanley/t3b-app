@@ -1,7 +1,7 @@
 import { Canvas } from '@/babylonjs/Canvas'
 import { ArcRotateCamera } from '@/modules/cameras/ArcRotateCamera'
+import { Skybox } from '@/modules/environment/Skybox'
 import { HemisphereLight } from '@/modules/lights/HemisphereLight'
-import { Skybox } from '@/modules/meshes/Skybox'
 import { DynamicGround } from '@/modules/meshes/DynamicGround'
 import { Welcome } from '@/modules/ui/Welcome'
 

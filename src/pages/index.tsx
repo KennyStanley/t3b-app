@@ -8,8 +8,8 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>T3X BabylonJS</title>
-        <meta name="description" content="T3X BabylonJS" />
+        <title>T3 Babylon.js</title>
+        <meta name="description" content="T3 Babylon.js" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

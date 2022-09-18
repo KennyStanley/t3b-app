@@ -1,16 +1,19 @@
 // External
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, ReactNode } from 'react'
 import Script from 'next/script'
-import * as BABYLON from '@babylonjs/core'
+import { Scene } from '@babylonjs/core/scene'
+import { Engine } from '@babylonjs/core/Engines/engine'
 // Internal
-import { SceneProvider } from './Scene'
+import { CanvasProvider } from './context'
 
-export const Canvas = ({ children }: { children?: React.ReactNode }) => {
+export const Canvas = ({ children }: { children?: ReactNode }) => {
+  const [isHidden, setIsHidden] = useState(false)
+
   // Keeps track of the canvas element
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   // Keep track of the scene
-  const [scene, setScene] = useState<BABYLON.Scene>()
+  const [scene, setScene] = useState<Scene>()
 
   // Handles creating and disposing of the Babylon engine and scene
   useEffect(() => {
@@ -18,10 +21,10 @@ export const Canvas = ({ children }: { children?: React.ReactNode }) => {
     if (!canvasRef.current) return
 
     // Create the Babylon engine
-    const engine = new BABYLON.Engine(canvasRef.current, true)
+    const engine = new Engine(canvasRef.current, true)
 
     // Create a scene
-    const scene = new BABYLON.Scene(engine)
+    const scene = new Scene(engine)
 
     // Run the render loop
     engine.runRenderLoop(() => {
@@ -47,26 +50,29 @@ export const Canvas = ({ children }: { children?: React.ReactNode }) => {
 
   return (
     <>
-      <div
-        id="canvasContainer"
-        className="absolute w-screen h-screen top-0 left-0"
-      >
+      <div id="canvasContainer" className="absolute top-0 left-0">
         <Script src="https://code.jquery.com/pep/0.4.3/pep.min.js" />
         <canvas
           id="renderCanvas"
           ref={canvasRef}
-          className="w-screen h-screen touch-none"
+          className={`${
+            isHidden ? 'w-0 h-0' : 'w-screen h-screen'
+          } touch-none select-none`}
         />
       </div>
       {/* Render the children under the scene provider once the scene is ready */}
       {scene && (
-        <SceneProvider scene={scene}>
+        <CanvasProvider
+          scene={scene}
+          isHidden={isHidden}
+          setIsHidden={setIsHidden}
+        >
           {/* add pointer-events-auto to any child UI modules that you want to click on */}
-          <span className="pointer-events-none">{children}</span>
-        </SceneProvider>
+          <span className={isHidden ? '' : 'pointer-events-none'}>
+            {children}
+          </span>
+        </CanvasProvider>
       )}
     </>
   )
 }
-
-export default Canvas

@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import * as BABYLON from '@babylonjs/core'
 
-import { useScene } from '@/babylonjs/Scene'
+import { useCanvas } from '@/babylonjs/canvas'
 
 export const HemisphereLight = () => {
-  const { scene } = useScene()
+  const { scene } = useCanvas()
 
   useEffect(() => {
     if (!scene) return

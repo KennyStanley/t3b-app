@@ -3,10 +3,10 @@ import * as BABYLON from '@babylonjs/core'
 
 import { noise } from '@/babylonjs/extensions/NoiseLibrary'
 
-import { useScene } from '@/babylonjs/Scene'
+import { useCanvas } from '@/babylonjs/canvas'
 
 export const DynamicGround = () => {
-  const { scene } = useScene()
+  const { scene } = useCanvas()
 
   useEffect(() => {
     if (!scene) return

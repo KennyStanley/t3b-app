@@ -2,7 +2,9 @@ import type { NextPage } from 'next'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 
-const HomeWorld = dynamic(() => import('@/worlds/HomeWorld'), { ssr: false })
+const HomeWorld = dynamic(() => import('@/babylonjs/worlds/HomeWorld'), {
+  ssr: false,
+})
 
 const Home: NextPage = () => {
   return (

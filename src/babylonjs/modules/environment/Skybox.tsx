@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import * as BABYLON from '@babylonjs/core'
 
-import { useScene } from '@/babylonjs/Scene'
+import { useCanvas } from '@/babylonjs/canvas'
 
 const skyboxUrls = {
   '1': 'https://www.babylonjs-playground.com/textures/TropicalSunnyDay',
@@ -12,7 +12,7 @@ const skyboxUrls = {
 }
 
 export const Skybox = () => {
-  const { scene } = useScene()
+  const { scene } = useCanvas()
 
   useEffect(() => {
     if (!scene) return
